@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
+    "prepare": "husky && husky install",
     "prebuild": "rimraf -rf dist",
+    "eslint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "test": "jest --runInBand --silent",
     "test:cov": "npm run test -- --coverage=true",
-    "eslint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
-    "prepare": "husky && husky install"
+    "start:dev": "ts-node-dev --respawn --transpile-only ./src/index.ts"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -16,7 +17,11 @@
       "git add"
     ]
   },
-  "keywords": ["discord", "bot", "typescript"],
+  "keywords": [
+    "discord",
+    "bot",
+    "typescript"
+  ],
   "author": "Arthur Akira",
   "license": "MIT",
   "description": "",
