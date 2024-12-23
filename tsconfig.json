@@ -10,7 +10,10 @@
       "@errors/*": ["src/errors/*"],
       "@test/*": ["test/*"],
       "@shared/*": ["src/shared/*"],
-      "types/*": ["src/types/*"]
+      "types/*": ["src/types/*"],
+      "@infra/*": ["src/infrastructure/*"],
+      "@domain/*": ["src/domain/*"],
+      "@application/*": ["src/application/*"]
     },
     "rootDirs": ["./src", "./test"],
     "sourceMap": true,
