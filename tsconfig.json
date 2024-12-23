@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "commonjs",
+    "baseUrl": "./",
+    "paths": {
+      "@functions/*": ["src/functions/*"],
+      "@database/*": ["src/database/*"],
+      "@providers/*": ["src/providers/*"],
+      "@errors/*": ["src/errors/*"],
+      "@test/*": ["test/*"],
+      "@shared/*": ["src/shared/*"],
+      "types/*": ["src/types/*"]
+    },
+    "rootDirs": ["./src", "./test"],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "removeComments": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true
+  }
+}
