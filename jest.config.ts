@@ -18,11 +18,12 @@ const config: Config.InitialOptions = {
     "dist",
     "jest.config.ts",
     "/functions/.+?/index\\.ts$",
-    "types",
+    "/src/index.ts",
+    "infrastructure/config",
   ],
   collectCoverageFrom: ["**/*.(t)s", "!dist/*"],
   coverageReporters: ["json", "text", "lcov", "cobertura", "html"],
-  reporters: ["jest-junit", "default"],
+  reporters: ["default"],
   coverageDirectory: "coverage",
   moduleNameMapper: {
     "^@functions/(.*)$": "<rootDir>/src/functions/$1",
@@ -30,6 +31,11 @@ const config: Config.InitialOptions = {
     "^@providers/(.*)$": "<rootDir>/src/providers/$1",
     "^@test/(.*)$": "<rootDir>/test/$1",
     "^@errors/(.*)$": "<rootDir>/src/errors/$1",
+
+    "^@application/(.*)$": "<rootDir>/src/application/$1",
+    "^@infrastructure/(.*)$": "<rootDir>/src/infrastructure/$1",
+    "^@domain/(.*)$": "<rootDir>/src/domain/$1",
+    "^@presentation/(.*)$": "<rootDir>/src/presentation/$1",
   },
 };
 export default config;
