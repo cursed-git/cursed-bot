@@ -1,8 +1,8 @@
 /**
  * Representa um comando que pode ser executado.
  */
-export interface Command {
-  execute(context: CommandExecutionContext): Promise<string>;
+export interface Command<Result = unknown> {
+  execute(context: CommandExecutionContext): Promise<Result>;
 }
 
 /**
@@ -18,4 +18,7 @@ export type CommandExecutionContext = {
 
   /** O identificador único do canal onde a mensagem foi enviada. */
   channelId: string;
+
+  /** O identificador único da guilda onde a mensagem foi enviada. */
+  guildId: string;
 };

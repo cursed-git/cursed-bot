@@ -14,10 +14,13 @@ export class DiscordEventAdapter {
         return;
       }
 
+      console.debug(message);
+
       const response = await this.commandController.handle({
         authorId: message.author.id,
         channelId: message.channel.id,
         messageContent: message.content,
+        guildId: message.guildId ?? "",
       });
 
       await message.reply(response);
