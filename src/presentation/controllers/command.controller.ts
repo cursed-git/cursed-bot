@@ -7,8 +7,8 @@ export class CommandController {
   ) {}
 
   public async handle(context: CommandExecutionContext): Promise<string> {
-    const { messageContent } = context;
-    const [commandName] = messageContent.slice(1).split(" "); // Remove o prefixo '!' e obtém o comando
+    const commandName =
+      context.command ?? context.messageContent.slice(1).split(" ")[0];
 
     try {
       return await this._commandExecutionService.execute(commandName, context);

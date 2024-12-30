@@ -8,6 +8,8 @@ dotenv.config();
 export const ENVS = {
   DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN ?? "",
   BOT_PREFIX: process.env.BOT_PREFIX ?? "!",
+  DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID ?? "",
+  DISCORD_GUILD_ID: process.env.DISCORD_GUILD_ID ?? "",
 };
 
 if (!ENVS.DISCORD_BOT_TOKEN) {

@@ -10,6 +10,9 @@ export interface Command<Result = unknown> {
  * Fornece informações essenciais sobre a mensagem, o autor e o canal.
  */
 export type CommandExecutionContext = {
+  /** O comando que foi executado. */
+  command?: string;
+
   /** O conteúdo completo da mensagem que disparou o comando. */
   messageContent: string;
 
