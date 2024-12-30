@@ -6,6 +6,7 @@ function generateInput(): CommandExecutionContext {
     authorId: "fake author",
     channelId: "fake channel",
     messageContent: "fake message",
+    guildId: "fake guild",
   };
 }
 
