@@ -22,7 +22,7 @@ export class CommandExecutionService {
   public async execute(
     commandName: string,
     context: CommandExecutionContext
-  ): Promise<string> {
+  ): Promise<any> {
     const command = this._commands.get(commandName);
 
     if (!command) {
