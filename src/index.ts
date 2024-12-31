@@ -2,13 +2,14 @@ import "dotenv/config";
 import { Client, GatewayIntentBits } from "discord.js";
 
 import { CommandExecutionService } from "@application/services/command-execution.service";
-import { PingCommand } from "@application/commands/ping";
 import { CommandController } from "./presentation/controllers/command.controller";
 import { DiscordEventAdapter } from "@infra/discord/discord-event.adapter";
 import { ENVS } from "@infra/config/config";
-import { DiscordTimeoutService } from "@infra/discord/services/timeout-service";
-import { TimeoutCommand } from "@application/commands/timeout";
-import { RemoveTimeoutCommand } from "@application/commands/remove-timeout";
+import { DiscordTimeoutService } from "@infra/discord/services/discord-timeout.service";
+import { TimeoutCommand } from "@application/commands/admin/timeout";
+import { RemoveTimeoutCommand } from "@application/commands/admin/remove-timeout";
+import { PingCommand } from "@application/commands/common/ping";
+import { DiscordPingService } from "@infra/discord/services/discord-ping.service";
 
 // Inicializa o cliente do Discord
 const discordBotClient = new Client({
@@ -21,8 +22,9 @@ const discordBotClient = new Client({
 });
 
 const timeoutService = new DiscordTimeoutService(discordBotClient);
+const pingService = new DiscordPingService(discordBotClient);
 
-const pingCommand = new PingCommand();
+const pingCommand = new PingCommand(pingService);
 const timeoutCommand = new TimeoutCommand(timeoutService);
 const unmuteCommand = new RemoveTimeoutCommand(timeoutService);
 

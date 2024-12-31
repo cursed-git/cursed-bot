@@ -7,10 +7,9 @@ export class CommandController {
   ) {}
 
   public async handle(context: CommandExecutionContext): Promise<string> {
-    const commandName =
-      context.command ?? context.messageContent.slice(1).split(" ")[0];
-
     try {
+      const { commandName } = context;
+
       return await this._commandExecutionService.execute(commandName, context);
     } catch (error: any) {
       return `Error: ${error?.message}`;
