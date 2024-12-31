@@ -18,6 +18,8 @@ export type TimeoutOptions = {
   reason?: string;
 };
 
+export type RemoveTimeoutOptions = Pick<TimeoutOptions, "userId">;
+
 export interface TimeoutService {
   timeoutUser(params: TimeoutUserParams): Promise<void>;
   removeTimeout(params: RemoveTimeoutParams): Promise<void>;

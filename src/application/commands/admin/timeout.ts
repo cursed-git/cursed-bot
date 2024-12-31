@@ -51,7 +51,7 @@ export class TimeoutCommand implements Command {
       reason: reason,
     });
 
-    return MessageBuilder.timeout({
+    return MessageBuilder.mute({
       userId,
       reason,
       durationInMinutes,

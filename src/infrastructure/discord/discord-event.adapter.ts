@@ -76,11 +76,7 @@ export class DiscordEventAdapter {
 
   public async listen(): Promise<void> {
     this.client.on("interactionCreate", async (interaction: Interaction) => {
-      console.debug(interaction);
-
       if (!interaction.isCommand()) return;
-
-      console.debug(interaction.options.data);
 
       const extractedOptions: SlashCommandOption[] =
         interaction.options.data.map((opt) => ({
@@ -96,6 +92,7 @@ export class DiscordEventAdapter {
         commandName: interaction.commandName,
         isSlashCommand: true,
         options: extractedOptions,
+        interactionId: interaction.id,
       };
 
       const response = await this.commandController.handle(context);

@@ -22,7 +22,7 @@ const discordBotClient = new Client({
 });
 
 const timeoutService = new DiscordTimeoutService(discordBotClient);
-const pingService = new DiscordPingService();
+const pingService = new DiscordPingService(discordBotClient);
 
 const pingCommand = new PingCommand(pingService);
 const timeoutCommand = new TimeoutCommand(timeoutService);

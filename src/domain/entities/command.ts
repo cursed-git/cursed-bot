@@ -25,6 +25,7 @@ export type SlashCommandExecutionContext = {
   commandName: string;
   isSlashCommand: true;
   options: SlashCommandOption[];
+  interactionId: string;
 };
 
 export type PrefixedCommandExecutionContext = {
