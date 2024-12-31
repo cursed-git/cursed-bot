@@ -5,13 +5,18 @@ import {
 import {
   Command,
   CommandExecutionContext,
+  PrefixedCommandExecutionContext,
   SlashCommandExecutionContext,
   SlashCommandOption,
 } from "@domain/entities/command";
 import { MessageBuilder } from "@templates/message-builder";
 
 export class RemoveTimeoutCommand implements Command {
-  constructor(private readonly _timeoutService: TimeoutService) {}
+  public readonly description: string;
+
+  constructor(private readonly _timeoutService: TimeoutService) {
+    this.description = "Remove o silêncio de um usuário.";
+  }
 
   private extractSlashCommandOptions(
     options: SlashCommandOption[]
@@ -44,9 +49,31 @@ export class RemoveTimeoutCommand implements Command {
     });
   }
 
+  private async handlePrefixedCommand(
+    context: PrefixedCommandExecutionContext
+  ): Promise<string> {
+    const [_, rawUserId] = context.messageContent.split(" ");
+
+    if (!rawUserId) {
+      throw new Error("Usuário não informado");
+    }
+
+    const userId = rawUserId.replace(/<@!?(\d+)>/, "$1");
+
+    await this._timeoutService.removeTimeout({
+      authorId: context.authorId,
+      guildId: context.guildId,
+      userId,
+    });
+
+    return MessageBuilder.unmute({
+      userId,
+    });
+  }
+
   public async execute(context: CommandExecutionContext): Promise<string> {
     try {
-      const { isSlashCommand, guildId, authorId } = context;
+      const { isSlashCommand, guildId } = context;
 
       if (!guildId) {
         throw new Error("Esse comando só pode ser executado em um servidor!");
@@ -55,17 +82,7 @@ export class RemoveTimeoutCommand implements Command {
       if (isSlashCommand) {
         return this.handleSlashCommand(context);
       }
-
-      const [_, rawUserId] = context.messageContent.split(" ");
-      const userId = rawUserId.replace(/<@!?(\d+)>/, "$1");
-
-      await this._timeoutService.removeTimeout({
-        authorId,
-        guildId,
-        userId,
-      });
-
-      return `Usuário <@${userId}> foi desmutado.`;
+      return this.handlePrefixedCommand(context);
     } catch (error: any) {
       console.error(error);
       return `Error: ${error?.message}`;

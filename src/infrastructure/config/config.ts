@@ -10,6 +10,12 @@ export const ENVS = {
   BOT_PREFIX: process.env.BOT_PREFIX ?? "!",
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID ?? "",
   DISCORD_GUILD_ID: process.env.DISCORD_GUILD_ID ?? "",
+  SKIP_COMMAND_CREATION: Boolean(
+    Number(process.env.SKIP_COMMAND_CREATION) ?? 0
+  ),
+  SKIP_COMMAND_DELETION: Boolean(
+    Number(process.env.SKIP_COMMAND_DELETION) ?? 0
+  ),
 };
 
 if (!ENVS.DISCORD_BOT_TOKEN) {

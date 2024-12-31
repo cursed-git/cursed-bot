@@ -5,13 +5,18 @@ import {
 import {
   Command,
   CommandExecutionContext,
+  PrefixedCommandExecutionContext,
   SlashCommandExecutionContext,
   SlashCommandOption,
 } from "@domain/entities/command";
 import { MessageBuilder } from "@templates/message-builder";
 
 export class TimeoutCommand implements Command {
-  constructor(private readonly _timeoutService: TimeoutService) {}
+  public readonly description: string;
+
+  constructor(private readonly _timeoutService: TimeoutService) {
+    this.description = "Silencia um usuário por um tempo determinado.";
+  }
 
   private extractSlashCommandOptions(
     options: SlashCommandOption[]
@@ -58,9 +63,40 @@ export class TimeoutCommand implements Command {
     });
   }
 
+  private async handlePrefixedCommand(
+    context: PrefixedCommandExecutionContext
+  ): Promise<string> {
+    const [_, rawUserId, durationInMinutes, ...reason] =
+      context.messageContent.split(" ");
+
+    if (!rawUserId) {
+      throw new Error("Usuário não informado");
+    }
+    if (!durationInMinutes) {
+      throw new Error("Duração do timeout não informado");
+    }
+
+    const userId = rawUserId.replace(/<@!?(\d+)>/, "$1");
+    const durationInMs = parseInt(durationInMinutes, 10) * 60 * 1000;
+
+    await this._timeoutService.timeoutUser({
+      userId,
+      duration: durationInMs,
+      guildId: context.guildId,
+      reason: reason.join(" "),
+      authorId: context.authorId,
+    });
+
+    return MessageBuilder.mute({
+      userId,
+      reason: reason.join(" "),
+      durationInMinutes: parseInt(durationInMinutes, 10),
+    });
+  }
+
   public async execute(context: CommandExecutionContext): Promise<string> {
     try {
-      const { isSlashCommand, guildId, authorId } = context;
+      const { isSlashCommand, guildId } = context;
 
       if (!guildId) {
         throw new Error("Esse comando só pode ser executado em um servidor!");
@@ -69,22 +105,7 @@ export class TimeoutCommand implements Command {
       if (isSlashCommand) {
         return this.handleSlashCommand(context);
       }
-
-      const [_, rawUserId, durationInMinutes, ...reason] =
-        context.messageContent.split(" ");
-
-      const userId = rawUserId.replace(/<@!?(\d+)>/, "$1");
-      const durationInMs = parseInt(durationInMinutes) * 60 * 1000;
-
-      await this._timeoutService.timeoutUser({
-        userId,
-        duration: durationInMs,
-        guildId,
-        reason: reason.join(" "),
-        authorId,
-      });
-
-      return `Usuário <@${userId}> foi silenciado por ${durationInMinutes} minutos.`;
+      return this.handlePrefixedCommand(context);
     } catch (error: any) {
       console.error(error);
       return `Error: ${error?.message}`;

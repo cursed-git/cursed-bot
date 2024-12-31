@@ -42,6 +42,9 @@ export type CommandExecutionContext =
   | PrefixedCommandExecutionContext;
 
 export interface Command<Result = string> {
+  /** Descrição do comando. */
+  readonly description: string;
+
   /** Executa um comando no contexto fornecido. */
   execute(context: CommandExecutionContext): Promise<Result>;
 }
