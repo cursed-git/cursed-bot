@@ -2,7 +2,7 @@ import {
   RemoveTimeoutParams,
   TimeoutService,
   TimeoutUserParams,
-} from "@application/services/timeout-service";
+} from "@application/services/timeout.service";
 import { Client, GuildMember } from "discord.js";
 
 export class DiscordTimeoutService implements TimeoutService {
@@ -49,9 +49,9 @@ export class DiscordTimeoutService implements TimeoutService {
   public async removeTimeout(params: RemoveTimeoutParams): Promise<void> {
     const { userId, guildId, authorId } = params;
 
-    const guild = await this._client.guilds.fetch(guildId); // Buscar a guilda
-    const guildMemberToBeUnmuted = await guild.members.fetch(userId); // Buscar o membro na guilda
-    const guildMemberAuthor = await guild.members.fetch(authorId); // Buscar o autor na guilda
+    const guild = await this._client.guilds.fetch(guildId);
+    const guildMemberToBeUnmuted = await guild.members.fetch(userId);
+    const guildMemberAuthor = await guild.members.fetch(authorId);
 
     const membersValidationResult = this.validateMembers(
       guildMemberAuthor,

@@ -7,7 +7,10 @@ import {
 } from "discord.js";
 import { ENVS } from "@infra/config/config";
 import { CommandController } from "src/presentation/controllers/command.controller";
-import { CommandExecutionContext } from "@domain/entities/command";
+import {
+  CommandExecutionContext,
+  SlashCommandOption,
+} from "@domain/entities/command";
 
 export class DiscordEventAdapter {
   constructor(
@@ -22,7 +25,7 @@ export class DiscordEventAdapter {
         .setDescription("Responde Pong!"),
       new SlashCommandBuilder()
         .setName("mute")
-        .setDescription("Silencia um usuário por um tempo determinado.")
+        .setDescription("Silencia um usuário por um tempo determinado")
         .addUserOption((option) =>
           option
             .setName("user")
@@ -43,11 +46,11 @@ export class DiscordEventAdapter {
         ),
       new SlashCommandBuilder()
         .setName("unmute")
-        .setDescription("Remove o silenciamento de um usuário.")
+        .setDescription("Remove o silenciamento de um usuário")
         .addUserOption((option) =>
           option
             .setName("user")
-            .setDescription("Usuário alvo")
+            .setDescription("Usuário que terá o timeout removido")
             .setRequired(true)
         ),
     ].map((command) => command.toJSON());
@@ -79,34 +82,25 @@ export class DiscordEventAdapter {
 
       console.debug(interaction.options.data);
 
+      const extractedOptions: SlashCommandOption[] =
+        interaction.options.data.map((opt) => ({
+          name: opt.name,
+          type: opt.type,
+          value: opt?.value ?? null,
+        }));
+
       const context: CommandExecutionContext = {
         authorId: interaction.user.id,
         channelId: interaction.channelId,
-        messageContent: interaction.commandName,
         guildId: interaction.guildId ?? "",
-        command: interaction.commandName,
+        commandName: interaction.commandName,
+        isSlashCommand: true,
+        options: extractedOptions,
       };
 
       const response = await this.commandController.handle(context);
 
       await interaction.reply(response);
-    });
-
-    this.client.on("messageCreate", async (message) => {
-      if (!message.content.startsWith(ENVS.BOT_PREFIX) || message.author.bot) {
-        return;
-      }
-
-      console.debug(message);
-
-      const response = await this.commandController.handle({
-        authorId: message.author.id,
-        channelId: message.channel.id,
-        messageContent: message.content,
-        guildId: message.guildId ?? "",
-      });
-
-      await message.reply(response);
     });
 
     this.client.once("ready", () => {

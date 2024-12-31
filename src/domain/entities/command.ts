@@ -1,27 +1,46 @@
 /**
- * Representa um comando que pode ser executado.
+ * Opções disponíveis para execução do comando.
+ *
+ * @example
+ * const muteOptions = { name: 'reason', type: 3, value: 'Motivo fútil' }
  */
-export interface Command<Result = unknown> {
+export type SlashCommandOption<
+  Name = string,
+  Value = string | number | boolean | null
+> = {
+  /** Nome do comando. */
+  name: Name;
+
+  /** Tipo do comando. */
+  type: number;
+
+  /** Valor do comando. */
+  value: Value;
+};
+
+export type SlashCommandExecutionContext = {
+  authorId: string;
+  guildId: string;
+  channelId: string;
+  commandName: string;
+  isSlashCommand: true;
+  options: SlashCommandOption[];
+};
+
+export type PrefixedCommandExecutionContext = {
+  authorId: string;
+  guildId: string;
+  channelId: string;
+  commandName: string;
+  isSlashCommand: false;
+  messageContent: string;
+};
+
+export type CommandExecutionContext =
+  | SlashCommandExecutionContext
+  | PrefixedCommandExecutionContext;
+
+export interface Command<Result = string> {
+  /** Executa um comando no contexto fornecido. */
   execute(context: CommandExecutionContext): Promise<Result>;
 }
-
-/**
- * Representa o contexto em que um comando é executado.
- * Fornece informações essenciais sobre a mensagem, o autor e o canal.
- */
-export type CommandExecutionContext = {
-  /** O comando que foi executado. */
-  command?: string;
-
-  /** O conteúdo completo da mensagem que disparou o comando. */
-  messageContent: string;
-
-  /** O identificador único do usuário que enviou a mensagem. */
-  authorId: string;
-
-  /** O identificador único do canal onde a mensagem foi enviada. */
-  channelId: string;
-
-  /** O identificador único da guilda onde a mensagem foi enviada. */
-  guildId: string;
-};
