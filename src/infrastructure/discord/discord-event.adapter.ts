@@ -1,81 +1,21 @@
-import {
-  Client,
-  Interaction,
-  REST,
-  Routes,
-  SlashCommandBuilder,
-} from "discord.js";
-import { ENVS } from "@infra/config/config";
-import { CommandController } from "src/presentation/controllers/command.controller";
+import { Client, Interaction } from "discord.js";
 import {
   CommandExecutionContext,
   SlashCommandOption,
 } from "@domain/entities/command";
+import { CommandController } from "@presentation/controllers/command.controller";
+import { SlashCommandsLoader } from "./slash-commands-loader";
+import { ENVS } from "@infra/config/config";
 
 export class DiscordEventAdapter {
   constructor(
-    private client: Client,
-    private commandController: CommandController
+    private readonly _client: Client,
+    private readonly _slashCommandLoader: SlashCommandsLoader,
+    private readonly _commandController: CommandController
   ) {}
 
-  private async registerSlashCommands(): Promise<void> {
-    const commands = [
-      new SlashCommandBuilder()
-        .setName("ping")
-        .setDescription("Responde Pong!"),
-      new SlashCommandBuilder()
-        .setName("mute")
-        .setDescription("Silencia um usuário por um tempo determinado")
-        .addUserOption((option) =>
-          option
-            .setName("user")
-            .setDescription("Usuário a ser silenciado")
-            .setRequired(true)
-        )
-        .addIntegerOption((option) =>
-          option
-            .setName("duration")
-            .setDescription("Duração em minutos")
-            .setRequired(true)
-        )
-        .addStringOption((option) =>
-          option
-            .setName("reason")
-            .setDescription("Motivo do silenciamento")
-            .setRequired(false)
-        ),
-      new SlashCommandBuilder()
-        .setName("unmute")
-        .setDescription("Remove o silenciamento de um usuário")
-        .addUserOption((option) =>
-          option
-            .setName("user")
-            .setDescription("Usuário que terá o timeout removido")
-            .setRequired(true)
-        ),
-    ].map((command) => command.toJSON());
-
-    const rest = new REST({ version: "9" }).setToken(ENVS.DISCORD_BOT_TOKEN);
-
-    try {
-      console.log("Started refreshing application (/) commands.");
-
-      await rest.put(
-        Routes.applicationGuildCommands(
-          ENVS.DISCORD_CLIENT_ID,
-          ENVS.DISCORD_GUILD_ID
-        ),
-        { body: commands }
-      );
-
-      console.log("Successfully reloaded application (/) commands.");
-    } catch (error) {
-      console.error("Failed to reload application (/) commands:", error);
-    }
-  }
-
   public async listen(): Promise<void> {
-    this.client.on("interactionCreate", async (interaction: Interaction) => {
+    this._client.on("interactionCreate", async (interaction: Interaction) => {
       if (!interaction.isCommand()) return;
 
       const extractedOptions: SlashCommandOption[] =
@@ -95,15 +35,34 @@ export class DiscordEventAdapter {
         interactionId: interaction.id,
       };
 
-      const response = await this.commandController.handle(context);
+      const response = await this._commandController.handle(context);
 
       await interaction.reply(response);
     });
 
-    this.client.once("ready", () => {
-      console.log(`Bot is ready! Logged in as ${this.client.user?.tag}`);
+    this._client.on("messageCreate", async (message) => {
+      if (!message.content.startsWith(ENVS.BOT_PREFIX) || message.author.bot) {
+        return;
+      }
+
+      const commandName = message.content.slice(1).split(" ")[0];
+
+      const response = await this._commandController.handle({
+        authorId: message.author.id,
+        channelId: message.channel.id,
+        messageContent: message.content,
+        guildId: message.guildId ?? "",
+        isSlashCommand: false,
+        commandName: commandName,
+      });
+
+      await message.reply(response);
     });
 
-    await this.registerSlashCommands();
+    this._client.once("ready", () => {
+      console.log(`Bot is ready! Logged in as ${this._client.user?.tag}`);
+    });
+
+    await this._slashCommandLoader.registerCommands();
   }
 }

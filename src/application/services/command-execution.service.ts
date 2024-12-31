@@ -19,6 +19,10 @@ export class CommandExecutionService {
     this._commands.set(name, command);
   }
 
+  public getCommands(): Map<string, Command> {
+    return new Map(this._commands);
+  }
+
   public async execute(
     commandName: string,
     context: CommandExecutionContext
