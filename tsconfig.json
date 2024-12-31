@@ -13,7 +13,8 @@
       "types/*": ["src/types/*"],
       "@infra/*": ["src/infrastructure/*"],
       "@domain/*": ["src/domain/*"],
-      "@application/*": ["src/application/*"]
+      "@application/*": ["src/application/*"],
+      "@templates/*": ["src/templates/*"]
     },
     "rootDirs": ["./src", "./test"],
     "sourceMap": true,

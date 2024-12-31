@@ -1,6 +1,6 @@
 import { PingService } from "@application/services/ping.service";
+import { MessageBuilder } from "@templates/message-builder";
 import { Client } from "discord.js";
-import { MessageBuilder } from "src/templates/message-builder";
 
 export class DiscordPingService implements PingService {
   constructor(private readonly _discordClient: Client) {}

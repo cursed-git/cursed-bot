@@ -8,7 +8,7 @@ import {
   SlashCommandExecutionContext,
   SlashCommandOption,
 } from "@domain/entities/command";
-import { MessageBuilder } from "src/templates/message-builder";
+import { MessageBuilder } from "@templates/message-builder";
 
 export class RemoveTimeoutCommand implements Command {
   constructor(private readonly _timeoutService: TimeoutService) {}
