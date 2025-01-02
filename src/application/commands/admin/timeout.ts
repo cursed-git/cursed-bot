@@ -15,7 +15,7 @@ export class TimeoutCommand implements Command {
   public readonly description: string;
 
   constructor(private readonly _timeoutService: TimeoutService) {
-    this.description = "Silencia um usuário por um tempo determinado.";
+    this.description = "Silencia um usuário por um tempo determinado";
   }
 
   private extractSlashCommandOptions(

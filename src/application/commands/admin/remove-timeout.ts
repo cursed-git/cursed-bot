@@ -15,7 +15,7 @@ export class RemoveTimeoutCommand implements Command {
   public readonly description: string;
 
   constructor(private readonly _timeoutService: TimeoutService) {
-    this.description = "Remove o silêncio de um usuário.";
+    this.description = "Remove o silêncio de um usuário";
   }
 
   private extractSlashCommandOptions(
