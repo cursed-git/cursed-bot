@@ -13,22 +13,28 @@ jobs:
     environment: Homolog
 
     steps:
-      # Checkout do código
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Instalar dependências
       - name: Install dependencies
         run: npm install
+
+      - name: Build project
+        run: npm run build
 
       - name: Move deploy files
         run: cp deploy/discloud/discloud.dev.config ./discloud.config
 
-      # Compactar o projeto
       - name: Zip project
-        run: zip -r bot.zip . -x "*.git*" "*.github*" "node_modules/*"
+        run: |
+          zip -r bot.zip \
+          package.json \
+          package-lock.json \
+          dist/* \
+          discloud.config \
+          .env \
+          -x "*.git*" "*.github*" "node_modules/*"
 
-      # Publicar na Discloud
       - name: Deploy to Discloud (Homolog)
         env:
           DISCLOUD_API_KEY: ${{ secrets.DISCLOUD_API_KEY }}
@@ -36,6 +42,8 @@ jobs:
           DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
           SKIP_COMMAND_CREATION: ${{ vars.SKIP_COMMAND_CREATION }}
           SKIP_COMMAND_DELETION: ${{ vars.SKIP_COMMAND_DELETION }}
+          VERSION: ${{vars.VERSION}}
+          ENV: ${{vars.ENV}}
         run: |
           curl -X POST "https://discloud.app/api/v2/app/upload" \
           -H "api-token: $DISCLOUD_API_KEY" \
