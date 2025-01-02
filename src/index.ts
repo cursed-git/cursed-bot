@@ -14,6 +14,7 @@ import { SlashCommandsLoader } from "@infra/discord/slash-commands-loader";
 import { ListCommandsCommand } from "@application/commands/common/commands";
 import { DiscordListCommandsService } from "@infra/discord/services/discord-list-commands.service";
 import { ListPrefixedCommandsCommand } from "@application/commands/common/prefixed-commands";
+import { VersionCommand } from "@application/commands/common/version";
 
 // Inicializa o cliente do Discord
 const discordBotClient = new Client({
@@ -38,6 +39,7 @@ const listCommandsCommand = new ListCommandsCommand(listCommandsService);
 const listPrefixedCommandsCommand = new ListPrefixedCommandsCommand(
   commandExecutionService
 );
+const versionCommand = new VersionCommand();
 
 commandExecutionService.registerCommand("ping", pingCommand);
 commandExecutionService.registerCommand("mute", timeoutCommand, [
@@ -52,10 +54,14 @@ commandExecutionService.registerCommand("commands", listCommandsCommand, [
   "help",
 ]);
 commandExecutionService.registerCommand(
-  "prefixedcommands",
+  "pcommands",
   listPrefixedCommandsCommand,
-  ["pcommands", "phelp"]
+  ["prefixedcommands", "phelp"]
 );
+commandExecutionService.registerCommand("version", versionCommand, [
+  "v",
+  "ver",
+]);
 
 const commandsController = new CommandController(commandExecutionService);
 const slashCommandsLoader = new SlashCommandsLoader();

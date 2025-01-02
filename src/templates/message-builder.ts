@@ -1,4 +1,5 @@
 import { SlashCommand } from "@domain/entities/slash-command";
+import { ENVS } from "@infra/config/config";
 
 type MuteMessageParams = {
   userId: string;
@@ -47,5 +48,21 @@ export class MessageBuilder {
     const message = `Ops... Comando \`${commandName}\` não encontrado!\nUse \`/commands\` para ver a lista de comandos disponíveis.`;
 
     return message;
+  }
+
+  public static version(version: string): string {
+    return `
+## ✨ Cursed Bot ✨
+
+### 🗂️ Versão
+- \`${ENVS.ENV} ${version}\`
+### 🔧 Status
+- Em desenvolvimento contínuo – sempre melhorando para você!
+### 📌 Detalhes:
+- Prefixo: \`${ENVS.BOT_PREFIX}\`
+- Tipo de comandos: Prefixados e Slash Commands
+- Suporte total a interações modernas do Discord 🚀
+
+**🤍 Obrigado por usar o Cursed Bot!**`;
   }
 }
