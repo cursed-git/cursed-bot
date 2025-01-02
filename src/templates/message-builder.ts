@@ -38,7 +38,7 @@ export class MessageBuilder {
 
     const message = slashCommandsProps.reduce((acc, command) => {
       return acc + `\`/${command.name}\` - ${command.description};\n`;
-    }, "Lista de comandos disponíveis:\n\n");
+    }, "**✨ Lista de Comandos ✨**\n\n");
 
     return message;
   }

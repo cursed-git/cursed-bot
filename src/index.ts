@@ -52,9 +52,9 @@ commandExecutionService.registerCommand("commands", listCommandsCommand, [
   "help",
 ]);
 commandExecutionService.registerCommand(
-  "prefixed-commands",
+  "prefixedcommands",
   listPrefixedCommandsCommand,
-  ["pcommands"]
+  ["pcommands", "phelp"]
 );
 
 const commandsController = new CommandController(commandExecutionService);
