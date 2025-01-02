@@ -1,0 +1,39 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deployHML:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.ref_name == 'develop' }}
+    runs-on: ubuntu-latest
+    environment: Homolog
+
+    steps:
+      # Checkout do código
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Instalar dependências
+      - name: Install dependencies
+        run: npm install
+
+      # Compactar o projeto
+      - name: Zip project
+        run: zip -r bot.zip . -x "*.git*" "*.github*" "node_modules/*"
+
+      # Publicar na Discloud
+      - name: Deploy to Discloud (Homolog)
+        env:
+          DISCLOUD_API_KEY: ${{ secrets.DISCLOUD_API_KEY }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
+          SKIP_COMMAND_CREATION: ${{ vars.SKIP_COMMAND_CREATION }}
+          SKIP_COMMAND_DELETION: ${{ vars.SKIP_COMMAND_DELETION }}
+        run: |
+          curl -X POST "https://discloud.app/api/v2/app/upload" \
+          -H "api-token: $DISCLOUD_API_KEY" \
+          -F "file=@bot.zip"
