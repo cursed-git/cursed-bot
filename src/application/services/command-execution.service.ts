@@ -1,4 +1,5 @@
 import { Command, CommandExecutionContext } from "@domain/entities/command";
+import { MessageBuilder } from "@templates/message-builder";
 
 /**
  * Caso de uso responsável pela execução de comandos.
@@ -30,7 +31,7 @@ export class CommandExecutionService {
     const command = this._commands.get(commandName);
 
     if (!command) {
-      throw new Error(`Command "${commandName}" not found.`);
+      throw new Error(MessageBuilder.commandNotFound(commandName));
     }
 
     return await command.execute(context);

@@ -1,3 +1,5 @@
+import { SlashCommand } from "@domain/entities/slash-command";
+
 type MuteMessageParams = {
   userId: string;
   durationInMinutes: number;
@@ -29,5 +31,21 @@ export class MessageBuilder {
 
   public static ping(params: PingMessageParams): string {
     return `🏓 **Pong!**\nLatência do WebSocket: \`${params.websocketPing}ms\``;
+  }
+
+  public static commandsList(commands: SlashCommand[]): string {
+    const slashCommandsProps = commands.map((command) => command.toJSON());
+
+    const message = slashCommandsProps.reduce((acc, command) => {
+      return acc + `\`/${command.name}\` - ${command.description};\n`;
+    }, "Lista de comandos disponíveis:\n\n");
+
+    return message;
+  }
+
+  public static commandNotFound(commandName: string): string {
+    const message = `Ops... Comando \`${commandName}\` não encontrado!\nUse \`/commands\` para ver a lista de comandos disponíveis.`;
+
+    return message;
   }
 }

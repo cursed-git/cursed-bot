@@ -11,7 +11,8 @@ import { PingCommand } from "@application/commands/common/ping";
 import { DiscordPingService } from "@infra/discord/services/discord-ping.service";
 import { CommandController } from "@presentation/controllers/command.controller";
 import { SlashCommandsLoader } from "@infra/discord/slash-commands-loader";
-import { HelpCommand } from "@application/commands/common/help";
+import { ListCommandsCommand } from "@application/commands/common/commands";
+import { DiscordListCommandsService } from "@infra/discord/services/discord-list-commands.service";
 
 // Inicializa o cliente do Discord
 const discordBotClient = new Client({
@@ -25,10 +26,12 @@ const discordBotClient = new Client({
 
 const timeoutService = new DiscordTimeoutService(discordBotClient);
 const pingService = new DiscordPingService(discordBotClient);
+const listCommandsService = new DiscordListCommandsService();
 
 const pingCommand = new PingCommand(pingService);
 const timeoutCommand = new TimeoutCommand(timeoutService);
 const unmuteCommand = new RemoveTimeoutCommand(timeoutService);
+const listCommandsCommand = new ListCommandsCommand(listCommandsService);
 
 // Registra comandos
 const commandExecutionService = new CommandExecutionService();
@@ -43,9 +46,8 @@ commandExecutionService.registerCommand("untimeout", unmuteCommand);
 commandExecutionService.registerCommand("unmute", unmuteCommand);
 commandExecutionService.registerCommand("reverse-curse", unmuteCommand);
 
-const helpCommand = new HelpCommand(commandExecutionService);
-
-commandExecutionService.registerCommand("help", helpCommand);
+commandExecutionService.registerCommand("commands", listCommandsCommand);
+commandExecutionService.registerCommand("help", listCommandsCommand);
 
 const commandsController = new CommandController(commandExecutionService);
 const slashCommandsLoader = new SlashCommandsLoader();
