@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Move deploy files
+        run: cp deploy/discloud/discloud.dev.config ./discloud.config
+
       # Compactar o projeto
       - name: Zip project
         run: zip -r bot.zip . -x "*.git*" "*.github*" "node_modules/*"
