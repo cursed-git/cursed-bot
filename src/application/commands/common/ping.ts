@@ -5,7 +5,7 @@ export class PingCommand implements Command<string> {
   public readonly description: string;
 
   constructor(private readonly _pingService: PingService) {
-    this.description = "Responde com Pong!";
+    this.description = "Pong! 🏓 Mede a latência do servidor";
   }
 
   public async execute(): Promise<string> {

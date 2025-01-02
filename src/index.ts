@@ -11,7 +11,10 @@ import { PingCommand } from "@application/commands/common/ping";
 import { DiscordPingService } from "@infra/discord/services/discord-ping.service";
 import { CommandController } from "@presentation/controllers/command.controller";
 import { SlashCommandsLoader } from "@infra/discord/slash-commands-loader";
-import { HelpCommand } from "@application/commands/common/help";
+import { ListCommandsCommand } from "@application/commands/common/commands";
+import { DiscordListCommandsService } from "@infra/discord/services/discord-list-commands.service";
+import { ListPrefixedCommandsCommand } from "@application/commands/common/prefixed-commands";
+import { VersionCommand } from "@application/commands/common/version";
 
 // Inicializa o cliente do Discord
 const discordBotClient = new Client({
@@ -25,27 +28,40 @@ const discordBotClient = new Client({
 
 const timeoutService = new DiscordTimeoutService(discordBotClient);
 const pingService = new DiscordPingService(discordBotClient);
+const listCommandsService = new DiscordListCommandsService();
+
+const commandExecutionService = new CommandExecutionService();
 
 const pingCommand = new PingCommand(pingService);
 const timeoutCommand = new TimeoutCommand(timeoutService);
 const unmuteCommand = new RemoveTimeoutCommand(timeoutService);
-
-// Registra comandos
-const commandExecutionService = new CommandExecutionService();
+const listCommandsCommand = new ListCommandsCommand(listCommandsService);
+const listPrefixedCommandsCommand = new ListPrefixedCommandsCommand(
+  commandExecutionService
+);
+const versionCommand = new VersionCommand();
 
 commandExecutionService.registerCommand("ping", pingCommand);
-
-commandExecutionService.registerCommand("timeout", timeoutCommand);
-commandExecutionService.registerCommand("mute", timeoutCommand);
-commandExecutionService.registerCommand("curse", timeoutCommand);
-
-commandExecutionService.registerCommand("untimeout", unmuteCommand);
-commandExecutionService.registerCommand("unmute", unmuteCommand);
-commandExecutionService.registerCommand("reverse-curse", unmuteCommand);
-
-const helpCommand = new HelpCommand(commandExecutionService);
-
-commandExecutionService.registerCommand("help", helpCommand);
+commandExecutionService.registerCommand("mute", timeoutCommand, [
+  "timeout",
+  "curse",
+]);
+commandExecutionService.registerCommand("unmute", unmuteCommand, [
+  "untimeout",
+  "reverse-curse",
+]);
+commandExecutionService.registerCommand("commands", listCommandsCommand, [
+  "help",
+]);
+commandExecutionService.registerCommand(
+  "pcommands",
+  listPrefixedCommandsCommand,
+  ["prefixedcommands", "phelp"]
+);
+commandExecutionService.registerCommand("version", versionCommand, [
+  "v",
+  "ver",
+]);
 
 const commandsController = new CommandController(commandExecutionService);
 const slashCommandsLoader = new SlashCommandsLoader();

@@ -37,7 +37,10 @@ export class DiscordEventAdapter {
 
       const response = await this._commandController.handle(context);
 
-      await interaction.reply(response);
+      await interaction.reply({
+        content: response,
+        ephemeral: true,
+      });
     });
 
     this._client.on("messageCreate", async (message) => {

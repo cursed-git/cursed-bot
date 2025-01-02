@@ -16,6 +16,8 @@ export const ENVS = {
   SKIP_COMMAND_DELETION: Boolean(
     Number(process.env.SKIP_COMMAND_DELETION) ?? 0
   ),
+  VERSION: process.env.VERSION ?? "UNAVAILABLE",
+  ENV: process.env.ENV ?? "HOMOLOG",
 };
 
 if (!ENVS.DISCORD_BOT_TOKEN) {
