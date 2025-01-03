@@ -37,7 +37,7 @@ export class DiscordEventAdapter {
 
       await interaction.reply({
         content: response,
-        ephemeral: true,
+        options: { ephemeral: true },
       });
     });
 

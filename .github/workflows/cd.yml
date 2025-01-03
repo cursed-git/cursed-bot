@@ -56,7 +56,6 @@ jobs:
           "tsconfig.json" \
           "package-lock.json" \
           "README.md" \
-          "*.md" \
           "*.zip" \
           "*.exe" \
           "*.dev.json"
