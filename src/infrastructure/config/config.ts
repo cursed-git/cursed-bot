@@ -18,6 +18,8 @@ export const ENVS = {
   ),
   VERSION: process.env.VERSION ?? "UNAVAILABLE",
   ENV: process.env.ENV ?? "HOMOLOG",
+  DEV_MODE: Boolean(Number(process.env.DEV_MODE) ?? 0),
+  DISCORD_DEV_MODE_USER: process.env.DISCORD_DEV_MODE_USER ?? "",
 };
 
 if (!ENVS.DISCORD_BOT_TOKEN) {

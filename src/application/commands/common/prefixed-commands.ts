@@ -20,8 +20,10 @@ export class ListPrefixedCommandsCommand implements Command {
     let commandsListText = "**✨ Lista de Comandos Prefixados ✨**\n\n";
 
     commandsMap.forEach((value, commandName) => {
-      if (aliasesMap.has(commandName)) {
-        commandsListText += `\`${ENVS.BOT_PREFIX}${commandName}\` - ${value.description}`;
+      const isPublic = value?.isPrivate !== true;
+
+      if (aliasesMap.has(commandName) && isPublic) {
+        commandsListText += `- \`${ENVS.BOT_PREFIX}${commandName}\` - ${value.description}`;
 
         const commandAliases = aliasesMap.get(commandName);
         if (commandAliases && commandAliases.length > 0) {

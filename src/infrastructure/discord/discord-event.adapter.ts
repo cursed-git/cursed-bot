@@ -4,13 +4,11 @@ import {
   SlashCommandOption,
 } from "@domain/entities/command";
 import { CommandController } from "@presentation/controllers/command.controller";
-import { SlashCommandsLoader } from "./slash-commands-loader";
 import { ENVS } from "@infra/config/config";
 
 export class DiscordEventAdapter {
   constructor(
     private readonly _client: Client,
-    private readonly _slashCommandLoader: SlashCommandsLoader,
     private readonly _commandController: CommandController
   ) {}
 
@@ -65,7 +63,5 @@ export class DiscordEventAdapter {
     this._client.once("ready", () => {
       console.log(`Bot is ready! Logged in as ${this._client.user?.tag}`);
     });
-
-    await this._slashCommandLoader.registerCommands();
   }
 }
