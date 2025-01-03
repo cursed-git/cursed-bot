@@ -15,7 +15,6 @@
 /README.md
  
 # Extensions
-*.md
 *.zip
 *.exe
 *.dev.json

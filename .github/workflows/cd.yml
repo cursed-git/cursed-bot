@@ -43,6 +43,7 @@ jobs:
           dist/* \
           discloud.config \
           .env \
+          docs/changelogs/* \
           -x \
           ".vscode/*" \
           "src/*" \
