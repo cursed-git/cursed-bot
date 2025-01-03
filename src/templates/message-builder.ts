@@ -38,7 +38,7 @@ export class MessageBuilder {
     const slashCommandsProps = commands.map((command) => command.toJSON());
 
     const message = slashCommandsProps.reduce((acc, command) => {
-      return acc + `\`/${command.name}\` - ${command.description};\n`;
+      return acc + `- \`/${command.name}\` - ${command.description};\n`;
     }, "**✨ Lista de Comandos ✨**\n\n");
 
     return message;
