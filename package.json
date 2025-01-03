@@ -11,7 +11,7 @@
     "test:cov": "npm run test -- --coverage=true",
     "start:local": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src/index.ts dotenv_config_path=.env.local",
     "start:dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./src/index.ts dotenv_config_path=.env.dev",
-    "start:prod": "node -r tsconfig-paths/register ./dist/index.js"
+    "start": "node -r tsconfig-paths/register ./dist/index.js"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

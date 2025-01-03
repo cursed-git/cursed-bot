@@ -1,0 +1,21 @@
+# Folders
+/.vscode
+/src
+/deprecated
+/discloud
+/node_modules
+ 
+# Files
+/.env.dev
+/.env.example
+/.eslintrc.json
+/.gitignore
+/tsconfig.json
+/package-lock.json
+/README.md
+ 
+# Extensions
+*.md
+*.zip
+*.exe
+*.dev.json

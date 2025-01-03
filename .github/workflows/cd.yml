@@ -25,27 +25,45 @@ jobs:
       - name: Move deploy files
         run: cp deploy/discloud/discloud.dev.config ./discloud.config
 
+      - name: Create .env file
+        run: |
+          echo DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} >> .env
+          echo DISCORD_GUILD_ID=${{ secrets.DISCORD_GUILD_ID }} >> .env
+          echo DEV_MODE=${{ vars.DEV_MODE }} >> .env
+          echo DISCORD_DEV_MODE_USER=${{ vars.DISCORD_DEV_MODE_USER }} >> .env
+          echo DISCLOUD_APP_ID=${{ vars.DISCLOUD_APP_ID }} >> .env
+          echo VERSION=${{ vars.VERSION }} >> .env
+          echo ENV=${{ vars.ENV }} >> .env
+
       - name: Zip project
         run: |
           zip -r bot.zip \
           package.json \
-          package-lock.json \
           dist/* \
           discloud.config \
           .env \
-          -x "*.git*" "*.github*" "node_modules/*"
+          -x \
+          ".vscode/*" \
+          "src/*" \
+          "deprecated/*" \
+          "discloud/*" \
+          "node_modules/*" \
+          ".env.dev" \
+          ".env.example" \
+          ".eslintrc.json" \
+          ".gitignore" \
+          "tsconfig.json" \
+          "package-lock.json" \
+          "README.md" \
+          "*.md" \
+          "*.zip" \
+          "*.exe" \
+          "*.dev.json"
 
       - name: Deploy to Discloud (Homolog)
         env:
           DISCLOUD_API_KEY: ${{ secrets.DISCLOUD_API_KEY }}
-          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
-
-          DEV_MODE: ${{ vars.DEV_MODE }}
-          DISCORD_DEV_MODE_USER: ${{ vars.DISCORD_DEV_MODE_USER }}
           DISCLOUD_APP_ID: ${{ vars.DISCLOUD_APP_ID }}
-          VERSION: ${{ vars.VERSION }}
-          ENV: ${{ vars.ENV }}
         run: |
           curl -X "PUT" \
           "https://api.discloud.app/v2/app/$DISCLOUD_APP_ID/commit" \
