@@ -45,9 +45,9 @@ jobs:
           VERSION: ${{ vars.VERSION }}
           ENV: ${{ vars.ENV }}
         run: |
-          curl -X 'PUT' \
-          'https://api.discloud.app/v2/app/$DISCLOUD_APP_ID/commit' \
-          -H 'accept: */*' \
-          -H 'api-token: $DISCLOUD_API_KEY' \
-          -H 'Content-Type: multipart/form-data' \
-          -F 'file=@bot.zip;type=application/x-zip-compressed'
+          curl -X "PUT" \
+          "https://api.discloud.app/v2/app/$DISCLOUD_APP_ID/commit" \
+          -H "accept: */*" \
+          -H "api-token: $DISCLOUD_API_KEY" \
+          -H "Content-Type: multipart/form-data" \
+          -F "file=@bot.zip;type=application/x-zip-compressed"
