@@ -10,11 +10,13 @@ import { RemoveTimeoutCommand } from "@application/commands/admin/remove-timeout
 import { PingCommand } from "@application/commands/common/ping";
 import { DiscordPingService } from "@infra/discord/services/discord-ping.service";
 import { CommandController } from "@presentation/controllers/command.controller";
-import { SlashCommandsLoader } from "@infra/discord/slash-commands-loader";
 import { ListCommandsCommand } from "@application/commands/common/commands";
 import { DiscordListCommandsService } from "@infra/discord/services/discord-list-commands.service";
 import { ListPrefixedCommandsCommand } from "@application/commands/common/prefixed-commands";
 import { VersionCommand } from "@application/commands/common/version";
+import { DiscordSlashCommandsManagerService } from "@infra/discord/services/discord-slash-commands-manager.service";
+import { LoadCommandsCommand } from "@application/commands/dev/load-commands";
+import { DeleteCommandsCommand } from "@application/commands/dev/delete-commands";
 
 // Inicializa o cliente do Discord
 const discordBotClient = new Client({
@@ -63,12 +65,22 @@ commandExecutionService.registerCommand("version", versionCommand, [
   "ver",
 ]);
 
+// DEV MODE - START
+const slashCommandsManager = new DiscordSlashCommandsManagerService();
+const loadCommandsCommand = new LoadCommandsCommand(slashCommandsManager);
+const deleteCommandsCommand = new DeleteCommandsCommand(slashCommandsManager);
+
+commandExecutionService.registerCommand("loadcommands", loadCommandsCommand);
+commandExecutionService.registerCommand(
+  "deletecommands",
+  deleteCommandsCommand
+);
+// DEV MODE - END
+
 const commandsController = new CommandController(commandExecutionService);
-const slashCommandsLoader = new SlashCommandsLoader();
 
 const discordEventAdapter = new DiscordEventAdapter(
   discordBotClient,
-  slashCommandsLoader,
   commandsController
 );
 

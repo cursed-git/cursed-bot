@@ -45,6 +45,8 @@ export interface Command<Result = string> {
   /** Descrição do comando. */
   readonly description: string;
 
+  readonly isPrivate?: boolean;
+
   /** Executa um comando no contexto fornecido. */
   execute(context: CommandExecutionContext): Promise<Result>;
 }
