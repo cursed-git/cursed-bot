@@ -41,6 +41,8 @@ jobs:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
 
+          DEV_MODE: ${{ vars.DEV_MODE }}
+          DISCORD_DEV_MODE_USER: ${{ vars.DISCORD_DEV_MODE_USER }}
           DISCLOUD_APP_ID: ${{ vars.DISCLOUD_APP_ID }}
           VERSION: ${{ vars.VERSION }}
           ENV: ${{ vars.ENV }}
